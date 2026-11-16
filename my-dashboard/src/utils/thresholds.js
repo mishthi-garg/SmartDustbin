@@ -3,3 +3,12 @@ export const THRESHOLDS = {
   odor: { warn: 300, crit: 500 },      // MQ-135 index, tune after calibration
   tempEmergency: 60,                   // °C → treat as fire
 }
+export const OFFLINE_MINUTES = 10
+
+export const ALERT_META = {
+  fire:    { icon: '🔥', label: 'Fire / smoke' },
+  full:    { icon: '🗑️', label: 'Bin full' },
+  odor:    { icon: '🌫️', label: 'Odor alert' },
+  animal:  { icon: '🐾', label: 'Animal activity' },
+  offline: { icon: '📡', label: 'Sensor offline' },
+}

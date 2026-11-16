@@ -6,3 +6,16 @@ export const MOCK_BINS = [
   { id: 'b3', name: 'Library',    lat: 26.9360, lng: 75.9232, fill_pct: 92, temp_c: 30, odor_index: 220, animal_alert: true,  smoke: false, updated_at: new Date().toISOString() },
   { id: 'b4', name: 'Hostel A',   lat: 26.9358, lng: 75.9248, fill_pct: 20, temp_c: 68, odor_index: 600, animal_alert: false, smoke: true,  updated_at: new Date().toISOString() },
 ]
+
+const ago = (min) => new Date(Date.now() - min * 60000).toISOString()
+
+export const MOCK_ALERTS = [
+  { id: 1, bin_id: 'b4', type: 'fire',   severity: 3, message: 'Smoke / high temperature', created_at: ago(2) },
+  { id: 2, bin_id: 'b3', type: 'full',   severity: 2, message: 'Fill level 92%',           created_at: ago(14) },
+  { id: 3, bin_id: 'b3', type: 'animal', severity: 1, message: 'Animal activity detected', created_at: ago(30) },
+]
+
+export const MOCK_HISTORY = [
+  { id: 1, collected_at: ago(180), worker_name: 'Ramesh', fill_before: 88, bins: { name: 'Canteen' } },
+  { id: 2, collected_at: ago(420), worker_name: 'Suresh', fill_before: 91, bins: { name: 'Library' } },
+]

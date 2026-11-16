@@ -14,3 +14,15 @@ export function getBinStatus(b) {
     return 'warning'
   return 'normal'
 }
+const RANK = { emergency: 3, critical: 2, warning: 1, normal: 0 }
+export const statusRank = (s) => RANK[s]
+
+// status after accounting for "worker collected it since the last sensor reading"
+export function withStatus(bin) {
+  const raw = getBinStatus(bin)
+  const done =
+    !!bin.last_collected_at &&
+    raw !== 'emergency' &&
+    (!bin.updated_at || new Date(bin.last_collected_at) > new Date(bin.updated_at))
+  return { ...bin, done, status: done ? 'normal' : raw }
+}
