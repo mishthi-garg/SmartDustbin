@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchHistory } from '../../services/alertService'
 
-export default function CollectionHistory({ refreshKey }) {
+export default function CollectionHistory({ refreshKey, binId }) {
   const [rows, setRows] = useState([])
 
   useEffect(() => {
@@ -10,14 +10,19 @@ export default function CollectionHistory({ refreshKey }) {
     return () => { alive = false }
   }, [refreshKey])
 
-  if (!rows.length) return <p className="hint">No collections logged yet</p>
+  const visibleRows = binId ? rows.filter((row) => row.bin_id === binId) : rows
+
+  if (!visibleRows.length) {
+    const emptyMessage = binId ? 'No collections for this bin yet' : 'No collections logged yet'
+    return <p className="hint">{emptyMessage}</p>
+  }
 
   return (
     <div className="table-wrap">
       <table className="bin-table">
         <thead><tr><th>When</th><th>Bin</th><th>Worker</th><th>Fill before</th></tr></thead>
         <tbody>
-          {rows.map((r) => (
+          {visibleRows.map((r) => (
             <tr key={r.id}>
               <td>{new Date(r.collected_at).toLocaleString()}</td>
               <td>{r.bins?.name}</td>

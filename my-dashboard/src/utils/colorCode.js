@@ -26,3 +26,9 @@ export function withStatus(bin) {
     (!bin.updated_at || new Date(bin.last_collected_at) > new Date(bin.updated_at))
   return { ...bin, done, status: done ? 'normal' : raw }
 }
+
+// generic 3-level classifier for stat cards
+export function levelOf(value, warn, crit) {
+  if (value == null) return 'normal'
+  return value >= crit ? 'critical' : value >= warn ? 'warning' : 'normal'
+}

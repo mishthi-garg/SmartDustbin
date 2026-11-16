@@ -21,7 +21,7 @@ export async function fetchHistory(limit = 50) {
   if (!supabase) return MOCK_HISTORY
   const { data } = await supabase
     .from('collections')
-    .select('id, collected_at, worker_name, fill_before, bins(name)')
+    .select('id, bin_id, collected_at, worker_name, fill_before, bins(name)')
     .order('collected_at', { ascending: false })
     .limit(limit)
   return data ?? []

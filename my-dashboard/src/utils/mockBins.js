@@ -16,6 +16,6 @@ export const MOCK_ALERTS = [
 ]
 
 export const MOCK_HISTORY = [
-  { id: 1, collected_at: ago(180), worker_name: 'Ramesh', fill_before: 88, bins: { name: 'Canteen' } },
-  { id: 2, collected_at: ago(420), worker_name: 'Suresh', fill_before: 91, bins: { name: 'Library' } },
+  { id: 1, bin_id: 'b2', collected_at: ago(180), worker_name: 'Ramesh', fill_before: 88, bins: { name: 'Canteen' } },
+  { id: 2, bin_id: 'b3', collected_at: ago(420), worker_name: 'Suresh', fill_before: 91, bins: { name: 'Library' } },
 ]

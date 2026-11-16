@@ -25,7 +25,7 @@ export default function Login() {
   }
 
   return (
-    <div className="overlay" style={{ position: 'static', minHeight: '100vh' }}>
+    <div className="login-wrap">
       <form className="report-form" onSubmit={onSubmit}>
         <h3>Staff login</h3>
         <label>Email
