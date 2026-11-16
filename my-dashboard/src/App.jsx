@@ -5,6 +5,10 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import PublicMap from './pages/PublicMap'
 import Login from './pages/Login'
 import WorkerDashboard from './pages/WorkerDashboard'
+import AdminDashboard from './pages/AdminDashboard'
+import AnalyticsOverview from './components/admin/AnalyticsOverview'
+import BinTrends from './components/admin/BinTrends'
+import ProblematicBins from './components/admin/ProblematicBins'
 
 export default function App() {
   return (
@@ -21,7 +25,18 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          {/* /admin and /tech come later */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allow={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<AnalyticsOverview />} />
+            <Route path="trends" element={<BinTrends />} />
+            <Route path="problematic" element={<ProblematicBins />} />
+          </Route>
         </Routes>
       </BinProvider>
     </AuthProvider>

@@ -12,4 +12,5 @@ export const ALERT_META = {
   odor:    { icon: '🌫️', label: 'Odor alert' },
   animal:  { icon: '🐾', label: 'Animal activity' },
   offline: { icon: '📡', label: 'Sensor offline' },
+  battery: { icon: '🔋', label: 'Low battery' },
 }
