@@ -296,3 +296,31 @@ button:disabled { opacity: .6; cursor: default; }
   .worker-overview-metrics small { min-height: 30px; font-size: 10px; }
   .worker-content-heading { align-items: flex-start; flex-direction: column; }
 }
+
+/* ---------- technician ---------- */
+.sensor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+.sensor { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; padding: 12px 6px; border: 1px solid var(--border); border-radius: 14px; background: var(--panel-soft); }
+.sensor-ring { position: relative; width: 72px; height: 72px; margin-bottom: 6px; }
+.sensor-ring svg { width: 72px; height: 72px; transform: rotate(-90deg); }
+.ring-track { fill: none; stroke: #eceff6; stroke-width: 7; }
+.ring-arc { fill: none; stroke-width: 7; stroke-linecap: round; transition: stroke-dasharray .6s ease; }
+.ring-icon { position: absolute; inset: 0; display: grid; place-items: center; }
+.sensor.offline .ring-track { stroke: var(--bad-bg); }
+.sensor b { font-size: 14px; }
+.sensor small { color: var(--muted); font-size: 12px; }
+.sensor .reading { font-weight: 600; font-size: 16px; margin-top: 4px; }
+.sensor .pill { margin: 8px 0 0; }
+.sensor-note { margin-top: 4px; max-width: 150px; }
+
+.gauge-scale { display: flex; justify-content: space-between; font-size: 10px; letter-spacing: .1em; color: var(--muted); max-width: 260px; margin: 6px auto 0; }
+
+.rt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.rt-head { display: flex; justify-content: space-between; align-items: flex-start; }
+.rt-head .panel-head h3 { font-size: 18px; }
+.rt-value { font-size: 26px; }
+.rt-value small { font-size: 12px; color: var(--muted); margin-left: 2px; }
+.map-compact .bin-map { height: 260px; }
+
+@media (max-width: 860px) {
+  .rt-grid { grid-template-columns: 1fr; }
+}

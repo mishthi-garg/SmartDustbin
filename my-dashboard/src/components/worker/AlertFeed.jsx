@@ -17,7 +17,7 @@ export default function AlertFeed({ alerts, bins, onResolve }) {
               <b>{meta.label}</b> · {nameOf(a.bin_id)}
               <small>{a.message} · {timeAgo(a.created_at)}</small>
             </div>
-            {!a.derived && <button onClick={() => onResolve(a.id)}>Resolve</button>}
+            {!a.derived && onResolve && <button onClick={() => onResolve(a.id)}>Resolve</button>}
           </li>
         )
       })}

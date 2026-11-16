@@ -31,7 +31,8 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     if (!supabase) {
-      setUser({ ...DEMO_USER, role: email.includes('admin') ? 'admin' : 'worker' })
+      const role = email.includes('admin') ? 'admin' : email.includes('tech') ? 'technician' : 'worker'
+      setUser({ ...DEMO_USER, role })
       return {}
     }
     const { error } = await supabase.auth.signInWithPassword({ email, password })

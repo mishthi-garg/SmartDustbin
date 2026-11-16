@@ -30,3 +30,16 @@ export const demoProblemStats = () =>
     alerts_30d: 14 - i * 3, animal_30d: (i * 5) % 9, fire_30d: i === 3 ? 2 : 0,
     collections_30d: 20 - i, fill_per_hour: 4.2 - i * 0.8,
   }))
+
+export function demoHistory(binId) {
+  const i = MOCK_BINS.findIndex((b) => b.id === binId) + 1
+  return Array.from({ length: 60 }, (_, m) => ({
+    created_at: new Date(Date.now() - (59 - m) * 60000).toISOString(),
+    fill_pct: 30 + i * 10 + Math.round(Math.sin(m / 8) * 4) + Math.floor(m / 12),
+    temp_c: Math.round((28 + Math.sin(m / 10 + i) * 2) * 10) / 10,
+    odor_index: 150 + i * 40 + Math.round(Math.sin(m / 5) * 30),
+    battery_pct: 80 - i * 10,
+    animal_alert: false,
+    smoke: false,
+  }))
+}

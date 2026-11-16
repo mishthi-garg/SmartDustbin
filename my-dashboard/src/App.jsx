@@ -9,6 +9,7 @@ import AdminDashboard from './pages/AdminDashboard'
 import AnalyticsOverview from './components/admin/AnalyticsOverview'
 import BinTrends from './components/admin/BinTrends'
 import ProblematicBins from './components/admin/ProblematicBins'
+import TechnicianPanel from './pages/TechnicianPanel'
 
 export default function App() {
   return (
@@ -37,6 +38,14 @@ export default function App() {
             <Route path="trends" element={<BinTrends />} />
             <Route path="problematic" element={<ProblematicBins />} />
           </Route>
+          <Route
+            path="/tech"
+            element={
+              <ProtectedRoute allow={['technician', 'admin']}>
+                <TechnicianPanel />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BinProvider>
     </AuthProvider>
