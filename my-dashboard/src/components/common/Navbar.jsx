@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
+import { ROLE_LABEL } from '../../utils/roles'
 
 export default function Navbar({ title, onSearch, searchOptions = [], children }) {
   const { user, logout } = useAuth()
@@ -27,7 +28,7 @@ export default function Navbar({ title, onSearch, searchOptions = [], children }
         {children}
         {user ? (
           <>
-            <span className="user-chip">{user.full_name} · {user.role}</span>
+            <span className="user-chip">{user.full_name} · {ROLE_LABEL[user.role] ?? user.role}</span>
             <button className="report-btn" onClick={logout}>Logout</button>
           </>
         ) : (

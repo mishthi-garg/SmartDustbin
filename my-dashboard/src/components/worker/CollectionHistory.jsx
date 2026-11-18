@@ -20,7 +20,7 @@ export default function CollectionHistory({ refreshKey, binId }) {
   return (
     <div className="table-wrap">
       <table className="bin-table">
-        <thead><tr><th>When</th><th>Bin</th><th>Worker</th><th>Fill before</th></tr></thead>
+        <thead><tr><th>When</th><th>Bin</th><th>Logged</th><th>Fill before</th></tr></thead>
         <tbody>
           {visibleRows.map((r) => (
             <tr key={r.id}>

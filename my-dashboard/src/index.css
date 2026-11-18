@@ -324,3 +324,16 @@ button:disabled { opacity: .6; cursor: default; }
 @media (max-width: 860px) {
   .rt-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- technician: device health ---------- */
+.device-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.metric { display: flex; flex-direction: column; gap: 4px; padding: 12px; border: 1px solid var(--border); border-radius: 14px; background: var(--panel-soft); }
+.metric-label { font-size: 11px; letter-spacing: .08em; color: var(--muted); }
+.metric b { font-size: 22px; }
+.metric small { color: var(--muted); font-size: 12px; }
+.metric .pill { align-self: flex-start; margin: 4px 0; }
+.metric.warning { border-color: var(--warn); }
+.metric.offline { border-color: var(--bad); }
+.pill.unknown { background: #eef1f6; color: var(--muted); }
+.sensor.warning { border-color: var(--warn); }
+.sensor.offline { border-color: var(--bad); }

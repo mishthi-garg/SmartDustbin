@@ -17,7 +17,7 @@ import ReportForm from '../components/public/ReportForm'
 
 const NAV = [
   { key: 'map', label: 'Campus map', icon: Map },
-  { key: 'worker', label: 'Worker dashboard', icon: LayoutDashboard },
+  { key: 'worker', label: 'Supervisor dashboard', icon: LayoutDashboard },
 ]
 
 const LABEL = {
@@ -87,7 +87,7 @@ export default function WorkerDashboard() {
 
       <main className="main worker-main">
         <div className="worker-page">
-          <Navbar title="Worker Dashboard">
+          <Navbar title="Supervisor Dashboard">
             {perm === 'default' && (
               <button
                 className="enable-alerts"

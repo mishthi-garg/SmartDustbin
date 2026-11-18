@@ -3,7 +3,7 @@ import { supabase } from '../services/supabase'
 
 export const AuthContext = createContext(null)
 
-const DEMO_USER = { id: 'demo', email: 'demo@campus.in', full_name: 'Demo Worker', role: 'worker' }
+const DEMO_USER = { id: 'demo', email: 'demo@campus.in', full_name: 'Demo', role: 'worker' }
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)      // { id, email, full_name, role }

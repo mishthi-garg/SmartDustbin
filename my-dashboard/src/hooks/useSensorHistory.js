@@ -3,8 +3,7 @@ import { supabase } from '../services/supabase'
 import { demoHistory } from '../utils/demoAnalytics'
 
 const HOUR = 3600000
-const FIELDS = 'created_at, fill_pct, temp_c, odor_index, battery_pct, animal_alert, smoke'
-
+const FIELDS = 'created_at, fill_pct, temp_c, odor_index, battery_pct, animal_alert, smoke, rssi, uptime_s, reset_reason'
 export function useSensorHistory(binId) {
   const [rows, setRows] = useState([])
 

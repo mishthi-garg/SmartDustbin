@@ -1,12 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useBinData } from '../hooks/useBinData'
 import { useAlerts } from '../hooks/useAlerts'
 import { useSensorHistory } from '../hooks/useSensorHistory'
-import { evaluateSensors, healthScore, healthLevel, batteryLevel } from '../utils/sensorHealth'
+import { fetchHourly, fetchBaseline } from '../services/analyticsService'
+import {
+  SENSORS, analyseSensor, evaluateDevice, healthScore, healthLevel, batteryLevel,
+  deliveryBuckets, driftPct,
+} from '../utils/sensorHealth'
 import Navbar from '../components/common/Navbar'
 import StatusDot from '../components/common/StatusDot'
 import BinMap from '../components/public/BinMap'
 import AlertFeed from '../components/worker/AlertFeed'
+import DeviceHealth from '../components/technician/DeviceHealth'
 import SensorHealthPanel from '../components/technician/SensorHealthPanel'
 import SensorGauge from '../components/technician/SensorGauge'
 import RealTimeChart from '../components/technician/RealTimeChart'
@@ -16,20 +21,39 @@ export default function TechnicianPanel() {
   const { alerts } = useAlerts()
   const [kind, setKind] = useState('dry')
   const [binId, setBinId] = useState(null)
+  const [hourly, setHourly] = useState([])
+  const [baseline, setBaseline] = useState([])
 
   const kindBins = bins.filter((b) => (b.kind ?? 'dry') === kind)
   const bin = kindBins.find((b) => b.id === binId) ?? kindBins[0]
   const history = useSensorHistory(bin?.id)
 
+  useEffect(() => {
+    if (!bin?.id) return
+    let alive = true
+    fetchHourly(bin.id, 3).then((r) => alive && setHourly(r))
+    fetchBaseline(bin.id).then((r) => alive && setBaseline(r))
+    return () => { alive = false }
+  }, [bin?.id])
+
   if (loading) return <p className="hint">Loading…</p>
 
-  const sensors = bin ? evaluateSensors(bin, history) : []
-  const score = healthScore(sensors)
+  const device = bin ? evaluateDevice(bin, history, hourly) : null
+  const drift = driftPct(baseline)
+  const sensors = bin
+    ? SENSORS.map((s) => analyseSensor(s, history, { stale: device.stale, driftPct: drift }))
+    : []
+  const score = bin ? healthScore([...device.metrics, ...sensors]) : 0
+  const m = device ? Object.fromEntries(device.metrics.map((x) => [x.key, x])) : {}
   const battery = bin?.battery_pct ?? null
+
   const deviceAlerts = alerts.filter((a) => a.type === 'offline' || a.type === 'battery')
-  const chartRows = history.map((r) => ({
+  const timeLabel = (iso) =>
+    new Date(iso).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+  const rssiRows = history.map((r) => ({ ...r, t: timeLabel(r.created_at) }))
+  const batteryRows = hourly.map((r) => ({
     ...r,
-    t: new Date(r.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+    t: new Date(r.hour).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit' }),
   }))
 
   return (
@@ -43,7 +67,7 @@ export default function TechnicianPanel() {
 
       <div className="panel-row">
         <div>
-          <h1 className="page-title">Hardware analytics</h1>
+          <h1 className="page-title">Sensor health</h1>
           <p className="panel-sub">{bin ? bin.name : 'No bin selected'}</p>
         </div>
         <div className="controls">
@@ -74,22 +98,23 @@ export default function TechnicianPanel() {
         <p className="hint">No {kind} bins registered yet</p>
       ) : (
         <>
-          <SensorHealthPanel sensors={sensors} binName={bin.name} />
-
           <div className="two-col">
             <SensorGauge title="Overall health" value={score} level={healthLevel(score)}
-              sub="sensors working" scale={['OFFLINE', 'WARNING', 'ONLINE']} />
+              sub="health checks passing" scale={['FAULT', 'CHECK', 'HEALTHY']} />
             <SensorGauge title="Battery" value={battery} level={batteryLevel(battery)}
-              sub={battery == null ? 'no battery data' : 'ESP32 power'} scale={['LOW', 'MEDIUM', 'FULL']} />
+              sub={battery == null ? 'no battery data' : m.battery.detail} scale={['LOW', 'MEDIUM', 'FULL']} />
           </div>
 
+          <DeviceHealth metrics={device.metrics} binName={bin.name} />
+          <SensorHealthPanel sensors={sensors} binName={bin.name} />
+
           <div className="rt-grid">
-            <RealTimeChart title="Fill level" data={chartRows} dataKey="fill_pct"
-              color="#2563eb" unit="%" current={bin.fill_pct} />
-            <RealTimeChart title="Odor" data={chartRows} dataKey="odor_index"
-              color="#f59e0b" current={bin.odor_index} />
-            <RealTimeChart title="Temperature" data={chartRows} dataKey="temp_c"
-              color="#ef4444" unit="°C" current={bin.temp_c} />
+            <RealTimeChart title="Readings received" range="LAST 1 HOUR · PER 5 MIN"
+              data={deliveryBuckets(history)} dataKey="received" color="#2563eb" current={m.delivery.value} />
+            <RealTimeChart title="Wi-Fi signal" range="LAST 1 HOUR"
+              data={rssiRows} dataKey="rssi" color="#0ea5e9" unit=" dBm" current={m.rssi.value.replace(' dBm', '')} />
+            <RealTimeChart title="Battery" range="LAST 3 DAYS"
+              data={batteryRows} dataKey="min_battery" color="#16a34a" current={m.battery.value} />
           </div>
         </>
       )}

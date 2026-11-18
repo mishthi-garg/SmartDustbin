@@ -127,7 +127,7 @@ export default function AnalyticsOverview() {
               ))}
             </tbody>
           </table>
-          {!shown.length && <p className="hint">Nothing here 🎉</p>}
+          {!shown.length && <p className="hint">Nothing here</p>}
         </div>
       </section>
     </>

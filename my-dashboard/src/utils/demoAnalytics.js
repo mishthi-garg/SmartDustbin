@@ -21,6 +21,7 @@ export function demoHourly(binId, days = 7) {
     avg_fill: (h * (2 + i)) % 100,
     max_odor: 150 + ((h * 37 * i) % 250),
     max_temp: 27 + ((h * i) % 7),
+    min_battery: Math.max(5, 95 - (h / 24) * (5 + i * 4)),
   }))
 }
 
@@ -33,13 +34,30 @@ export const demoProblemStats = () =>
 
 export function demoHistory(binId) {
   const i = MOCK_BINS.findIndex((b) => b.id === binId) + 1
-  return Array.from({ length: 60 }, (_, m) => ({
-    created_at: new Date(Date.now() - (59 - m) * 60000).toISOString(),
-    fill_pct: 30 + i * 10 + Math.round(Math.sin(m / 8) * 4) + Math.floor(m / 12),
-    temp_c: Math.round((28 + Math.sin(m / 10 + i) * 2) * 10) / 10,
-    odor_index: 150 + i * 40 + Math.round(Math.sin(m / 5) * 30),
-    battery_pct: 80 - i * 10,
-    animal_alert: false,
-    smoke: false,
+  const rows = []
+  for (let n = 119; n >= 0; n--) {
+    if (i === 4 && n % 5 < 2) continue            // b4: ~40% of readings never arrive
+    const m = 119 - n
+    rows.push({
+      created_at: new Date(Date.now() - n * 30000).toISOString(),
+      fill_pct: 30 + i * 10 + Math.round(Math.sin(m / 8) * 3),
+      temp_c: Math.round((28 + Math.sin(m / 10 + i) * 1.5) * 10) / 10,
+      odor_index: i === 3 && m % 3 === 0 ? null : 150 + i * 40 + Math.round(Math.sin(m / 5) * 40),  // b3: flaky odor sensor
+      battery_pct: 80 - i * 10,
+      animal_alert: false,
+      smoke: false,
+      rssi: i === 2 ? -84 : -60 - i * 3,          // b2: weak signal
+      uptime_s: 86400 * i + m * 30,
+      reset_reason: 'poweron',
+    })
+  }
+  return rows
+}
+
+export const demoBaseline = (binId) => {
+  const i = MOCK_BINS.findIndex((b) => b.id === binId) + 1
+  return Array.from({ length: 14 }, (_, d) => ({
+    day: new Date(Date.now() - (13 - d) * 86400000).toISOString(),
+    odor_baseline: 120 + (i === 1 ? d * 6 : 0),   // b1: baseline creeping up
   }))
 }
