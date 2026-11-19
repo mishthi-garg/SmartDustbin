@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Map as MapIcon, MapPin, Wind, Flag, Thermometer } from 'lucide-react'
 import { useBinData } from '../hooks/useBinData'
 import { sensorHealth, fmtTemp } from '../utils/formatData'
 import Sidebar from '../components/common/Sidebar'
@@ -10,6 +9,9 @@ import BinStatusCard from '../components/public/BinStatusCard'
 import NearbyBins from '../components/public/NearbyBins'
 import OdorAdvisories from '../components/public/OdorAdvisories'
 import ReportForm from '../components/public/ReportForm'
+import { Map as MapIcon, MapPin, Wind, Flag, Thermometer, LayoutDashboard } from 'lucide-react'
+import { useAuth } from '../hooks/useAuth'
+import { ROLE_HOME, ROLE_DASHBOARD } from '../utils/roles'
 
 const NAV = [
   { key: 'map', label: 'Live Map', icon: MapIcon },
@@ -24,6 +26,8 @@ export default function PublicMap() {
   const [showReport, setShowReport] = useState(false)
   const [active, setActive] = useState('map')
 
+  const { user } = useAuth()
+
   if (loading) return <p className="hint">Loading bins…</p>
 
   const selected = bins.find((b) => b.id === selectedId)
@@ -34,6 +38,10 @@ export default function PublicMap() {
   }
   const temps = bins.map((b) => b.temp_c).filter((t) => t != null)
   const avgTemp = temps.length ? temps.reduce((s, t) => s + t, 0) / temps.length : null
+
+  const nav = user
+  ? [{ key: 'home', label: ROLE_DASHBOARD[user.role], icon: LayoutDashboard, to: ROLE_HOME[user.role] }, ...NAV]
+  : NAV
 
   const goTo = (key) => {
     if (key === 'report') return setShowReport(true)
@@ -55,8 +63,7 @@ export default function PublicMap() {
 
   return (
     <div className="shell">
-      <Sidebar items={NAV} active={active} onSelect={goTo} health={health} />
-
+     <Sidebar items={nav} active={active} onSelect={goTo} health={health} />
       <div className="main">
         <Navbar onSearch={onSearch} searchOptions={bins.map((b) => b.name)}>
           <span className="chip" title="Average bin temperature">

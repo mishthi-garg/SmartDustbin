@@ -13,7 +13,7 @@ import StatusDot from '../components/common/StatusDot'
 const GROUPS = [
   { title: 'General', items: [
     { key: 'overview', label: 'Overview', icon: LayoutDashboard, to: '/admin', end: true },
-    { key: 'map', label: 'Live Bin Map', icon: MapIcon, soon: true },
+    { key: 'map', label: 'Live Bin Map', icon: MapIcon, to: '/' },
   ]},
   { title: 'Analytics', items: [
     { key: 'trends', label: 'Bin Trends', icon: TrendingUp, to: '/admin/trends' },

@@ -20,12 +20,13 @@ export default function CollectionHistory({ refreshKey, binId }) {
   return (
     <div className="table-wrap">
       <table className="bin-table">
-        <thead><tr><th>When</th><th>Bin</th><th>Logged</th><th>Fill before</th></tr></thead>
+        <thead><tr><th>When</th><th>Bin</th><th>Collected by</th><th>Logged by</th><th>Fill before</th></tr></thead>
         <tbody>
           {visibleRows.map((r) => (
             <tr key={r.id}>
               <td>{new Date(r.collected_at).toLocaleString()}</td>
               <td>{r.bins?.name}</td>
+              <td>{r.field_worker?.name ?? '--'}</td>
               <td>{r.worker_name}</td>
               <td>{r.fill_before != null ? `${r.fill_before}%` : '--'}</td>
             </tr>

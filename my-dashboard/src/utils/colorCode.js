@@ -32,3 +32,29 @@ export function levelOf(value, warn, crit) {
   if (value == null) return 'normal'
   return value >= crit ? 'critical' : value >= warn ? 'warning' : 'normal'
 }
+
+const COLLECTING_MAX_MIN = 120   // older "collecting" marks are treated as abandoned
+
+export const STATE_RANK = { emergency: 5, full: 4, collecting: 3, attention: 2, ok: 1, done: 0 }
+export const STATE_LABEL = {
+  emergency: 'Emergency', full: 'Full', collecting: 'Collecting',
+  attention: 'Attention', ok: 'OK', done: 'Done',
+}
+
+// bin + its assignment record → the one state the supervisor list shows
+export function workerState(bin, a) {
+  const b = withStatus(bin)
+  const collecting =
+    !!a?.collecting_since &&
+    Date.now() - new Date(a.collecting_since).getTime() < COLLECTING_MAX_MIN * 60000
+
+  const state =
+    b.status === 'emergency' ? 'emergency'
+    : collecting ? 'collecting'
+    : b.done ? 'done'
+    : b.status === 'critical' ? 'full'
+    : b.status === 'warning' ? 'attention'
+    : 'ok'
+
+  return { ...b, state, collecting, worker: a?.worker ?? null }
+}

@@ -8,3 +8,9 @@ export const ROLE_LABEL = {
   admin: 'Admin',
   technician: 'Technician',
 }
+
+export const ROLE_DASHBOARD = {
+  worker: 'Supervisor dashboard',
+  admin: 'Admin dashboard',
+  technician: 'Technician panel',
+}

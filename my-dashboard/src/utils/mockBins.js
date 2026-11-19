@@ -15,7 +15,19 @@ export const MOCK_ALERTS = [
   { id: 3, bin_id: 'b3', type: 'animal', severity: 1, message: 'Animal activity detected', created_at: ago(30) },
 ]
 
+// export const MOCK_HISTORY = [
+//   { id: 1, bin_id: 'b2', collected_at: ago(180), worker_name: 'Ramesh', fill_before: 88, bins: { name: 'Canteen' } },
+//   { id: 2, bin_id: 'b3', collected_at: ago(420), worker_name: 'Suresh', fill_before: 91, bins: { name: 'Library' } },
+// ]
+
 export const MOCK_HISTORY = [
-  { id: 1, bin_id: 'b2', collected_at: ago(180), worker_name: 'Ramesh', fill_before: 88, bins: { name: 'Canteen' } },
-  { id: 2, bin_id: 'b3', collected_at: ago(420), worker_name: 'Suresh', fill_before: 91, bins: { name: 'Library' } },
+  { id: 1, field_worker: { name: 'Ramesh' }, bin_id: 'b2', collected_at: ago(180), worker_name: 'Ramesh', fill_before: 88, bins: { name: 'Canteen' } },
+  { id: 2, field_worker: { name: 'Suresh' }, bin_id: 'b3', collected_at: ago(420), worker_name: 'Suresh', fill_before: 91, bins: { name: 'Library' } },
 ]
+
+export const MOCK_ASSIGNMENTS = {
+  b1: { worker: 'Ramesh', collecting_since: null },
+  b2: { worker: 'Suresh', collecting_since: null },
+  b3: { worker: 'Ramesh', collecting_since: new Date(Date.now() - 10 * 60000).toISOString() },
+  b4: { worker: 'Mahesh', collecting_since: null },
+}

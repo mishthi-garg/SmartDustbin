@@ -21,7 +21,7 @@ export async function fetchHistory(limit = 50) {
   if (!supabase) return MOCK_HISTORY
   const { data } = await supabase
     .from('collections')
-    .select('id, bin_id, collected_at, worker_name, fill_before, bins(name)')
+    .select('id, collected_at, worker_name, fill_before, bins(name), field_worker:workers(name)')
     .order('collected_at', { ascending: false })
     .limit(limit)
   return data ?? []
@@ -46,4 +46,10 @@ export async function notifyAlert(a) {
     if (reg) reg.showNotification(title, opts)   // Android Chrome only allows this form
     else new Notification(title, opts)
   } catch { /* some mobile browsers refuse; in-app feed still shows it */ }
+}
+
+export async function startCollecting(binId) {
+  if (!supabase) return { ok: true }
+  const { error } = await supabase.rpc('start_collecting', { p_bin_id: binId })
+  return error ? { ok: false, error: error.message } : { ok: true }
 }
