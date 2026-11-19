@@ -27,8 +27,8 @@ export default function BinMap({ bins, selected, onSelect }) {
     <div className="map-wrap">
       <MapContainer center={CAMPUS_CENTER} zoom={17} className="bin-map">
         <TileLayer
-          attribution="&copy; OpenStreetMap &copy; CARTO"
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution="&copy; OpenStreetMap contributors &copy; CARTO"
+          url={`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${import.meta.env.VITE_CARTO_API_KEY}`}
         />
         <Polyline
           positions={route}
