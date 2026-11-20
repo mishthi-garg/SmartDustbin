@@ -16,6 +16,15 @@ import SensorHealthPanel from '../components/technician/SensorHealthPanel'
 import SensorGauge from '../components/technician/SensorGauge'
 import RealTimeChart from '../components/technician/RealTimeChart'
 
+import { Map as MapIcon, Wrench } from 'lucide-react'
+import Sidebar from '../components/common/Sidebar'
+import { sensorHealth } from '../utils/formatData'
+
+const NAV = [
+  { key: 'map', label: 'Campus map', icon: MapIcon, to: '/', end: true },
+  { key: 'tech', label: 'Technician panel', icon: Wrench, to: '/tech' },
+]
+
 export default function TechnicianPanel() {
   const { bins, loading, live } = useBinData()
   const { alerts } = useAlerts()
@@ -38,6 +47,12 @@ export default function TechnicianPanel() {
 
   if (loading) return <p className="hint">Loading…</p>
 
+  const h = sensorHealth(bins)
+const sidebarHealth = {
+  ok: h.ok,
+  text: h.ok ? 'All sensors online' : `${h.offline} of ${h.total} sensors offline`,
+}
+
   const device = bin ? evaluateDevice(bin, history, hourly) : null
   const drift = driftPct(baseline)
   const sensors = bin
@@ -56,9 +71,12 @@ export default function TechnicianPanel() {
     t: new Date(r.hour).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit' }),
   }))
 
-  return (
-    <div className="worker-page">
-      <Navbar title="Maintenance Technician">
+ return (
+  <div className="shell">
+    <Sidebar items={NAV} health={sidebarHealth} />
+
+    <div className="main">
+    <Navbar title="Maintenance Technician">
         <span className="chip live">
           <StatusDot color={live ? '#22c55e' : '#94a3b8'} pulse={live} />
           {live ? 'LIVE' : 'DEMO'}
@@ -117,7 +135,8 @@ export default function TechnicianPanel() {
               data={batteryRows} dataKey="min_battery" color="#16a34a" current={m.battery.value} />
           </div>
         </>
-      )}
+            )}
+    </div>
     </div>
   )
 }
