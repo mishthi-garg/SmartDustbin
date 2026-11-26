@@ -7,7 +7,7 @@ export default function BinNode({ bin, selected, onSelect }) {
 
   const shared = {
     center: [bin.lat, bin.lng],
-    eventHandlers: { click: () => onSelect(bin.id) },
+    eventHandlers: onSelect ? { click: () => onSelect(bin.id) } : {},
   }
   const ring = (fillOpacity) => ({
     color, fillColor: color, fillOpacity, weight: 1, opacity: 0.4,

@@ -9,6 +9,11 @@ function SensorCircle({ s }) {
   const r = 30
   const len = 2 * Math.PI * r
   const frac = Math.min(1, s.validity / 100)       // ring = share of valid reads
+  const reading = s.reading == null
+    ? '--'
+    : s.boolean
+      ? s.reading ? 'Detected' : 'Clear'
+      : `${s.key === 'temp' ? s.reading.toFixed(1) : Math.round(s.reading)} ${s.unit}`
 
   return (
     <div className={`sensor ${s.status}`}>
@@ -25,6 +30,7 @@ function SensorCircle({ s }) {
 
       <b>{s.model}</b>
       <small>{s.label}</small>
+      <span className="reading">{reading}</span>
       <span className="reading">{Math.round(s.validity)}% valid</span>
       {!s.boolean && (
         <small>{s.noise == null ? 'noise: n/a' : `noise ±${s.noise.toFixed(1)} (max ${s.maxNoise})`}</small>

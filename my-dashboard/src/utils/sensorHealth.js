@@ -16,9 +16,9 @@ export const LIMITS = {
 
 // edit to match the sensors you actually fitted
 export const SENSORS = [
-  { key: 'fill',   model: 'HC-SR04', label: 'Fill level',  field: 'fill_pct',     valid: [0, 100],  maxNoise: 12,  maxStep: 40 },
-  { key: 'odor',   model: 'MQ-135',  label: 'Odor / gas',  field: 'odor_index',   valid: [0, 1000], maxNoise: 100, maxStep: 250, flatCheck: true },
-  { key: 'temp',   model: 'DHT11',   label: 'Temperature', field: 'temp_c',       valid: [-10, 80], maxNoise: 3,   maxStep: 8 },
+  { key: 'fill',   model: 'HC-SR04', label: 'Fill level',  field: 'fill_pct',     unit: '%', valid: [0, 100],  maxNoise: 12,  maxStep: 40 },
+  { key: 'odor',   model: 'MQ-135',  label: 'Odor / gas',  field: 'odor_index',   unit: 'index', valid: [0, 1000], maxNoise: 100, maxStep: 250, flatCheck: true },
+  { key: 'temp',   model: 'DHT11',   label: 'Temperature', field: 'temp_c',       unit: '°C', valid: [-10, 80], maxNoise: 3,   maxStep: 8 },
   { key: 'motion', model: 'PIR',     label: 'Motion',      field: 'animal_alert', boolean: true },
 ]
 
@@ -71,7 +71,7 @@ export function analyseSensor(s, rows, { stale = false, driftPct = null } = {}) 
   else if (spikes >= 3)                              { status = 'warning'; note = `${spikes} spikes: check supply and wiring` }
   
 
-  return { ...s, validity, noise, spikes, lastValidAt, status, note }
+  return { ...s, validity, noise, spikes, lastValidAt, reading: good[good.length - 1] ?? null, status, note }
 }
 
 /* ---------------- device level ---------------- */

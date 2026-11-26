@@ -227,6 +227,7 @@ button:disabled { opacity: .6; cursor: default; }
 .panel-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .controls select { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+.sensor-health-controls { position: sticky; top: 0; z-index: 20; justify-content: flex-end; padding: 8px 0; background: var(--bg); }
 
 .admin-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 14px; }
 .rank-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }

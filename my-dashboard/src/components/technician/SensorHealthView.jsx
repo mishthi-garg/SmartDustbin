@@ -21,8 +21,11 @@ export default function SensorHealthView({ alerts }) {
   const [hourly, setHourly] = useState([])
   const [baseline, setBaseline] = useState([])
 
+  const selectedBin = bins.find((b) => b.id === binId)
+    ?? bins.find((b) => (b.kind ?? 'dry') === 'dry')
+    ?? bins[0]
   const kindBins = bins.filter((b) => (b.kind ?? 'dry') === kind)
-  const bin = bins.find((b) => b.id === binId) ?? kindBins[0]
+  const bin = kindBins.find((b) => b.id === selectedBin?.id) ?? kindBins[0] ?? selectedBin
   const history = useSensorHistory(bin?.id)
 
   useEffect(() => {
@@ -35,7 +38,6 @@ export default function SensorHealthView({ alerts }) {
 
   if (loading) return <p className="hint">Loading…</p>
 
-  // the map shows every bin; clicking one of the other type switches the toggle
   const pickBin = (id) => {
     const b = bins.find((x) => x.id === id)
     if (!b) return
@@ -66,18 +68,18 @@ export default function SensorHealthView({ alerts }) {
       <div className="panel-row">
         <div>
           <h1 className="page-title">Sensor health</h1>
-          <p className="panel-sub">{bin ? bin.name : 'No bin selected'}</p>
+          <p className="panel-sub">{bin ? `${bin.name} · ${kind} bin stats` : 'No bin selected'}</p>
         </div>
-        <div className="controls">
-          <select value={bin?.id ?? ''} onChange={(e) => pickBin(e.target.value)}>
-            {bins.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-          </select>
-          <div className="seg">
-            {[['dry', 'Dry bin'], ['wet', 'Wet bin']].map(([k, l]) => (
-              <button key={k} className={kind === k ? 'on' : ''}
-                onClick={() => { setKind(k); setBinId(null) }}>{l}</button>
-            ))}
-          </div>
+      </div>
+      <div className="controls sensor-health-controls">
+        <select value={selectedBin?.id ?? ''} onChange={(e) => pickBin(e.target.value)}>
+          {bins.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+        </select>
+        <div className="seg">
+          {[['dry', 'Dry bin'], ['wet', 'Wet bin']].map(([k, l]) => (
+            <button key={k} className={kind === k ? 'on' : ''}
+              onClick={() => setKind(k)}>{l}</button>
+          ))}
         </div>
       </div>
 
@@ -89,10 +91,10 @@ export default function SensorHealthView({ alerts }) {
       )}
 
       <section className="panel map-compact">
-        <BinMap bins={bins} selected={bin} onSelect={pickBin} />
+        <BinMap bins={bins} selected={selectedBin} />
       </section>
 
-      {!bin ? (
+      {!kindBins.length ? (
         <p className="hint">No {kind} bins registered yet</p>
       ) : (
         <>

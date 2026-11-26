@@ -33,16 +33,19 @@ export const demoProblemStats = () =>
   }))
 
 export function demoHistory(binId) {
+  const bin = MOCK_BINS.find((b) => b.id === binId)
   const i = MOCK_BINS.findIndex((b) => b.id === binId) + 1
+  const wet = bin?.kind === 'wet'
   const rows = []
   for (let n = 119; n >= 0; n--) {
     if (i === 4 && n % 5 < 2) continue            // b4: ~40% of readings never arrive
     const m = 119 - n
     rows.push({
       created_at: new Date(Date.now() - n * 30000).toISOString(),
-      fill_pct: 30 + i * 10 + Math.round(Math.sin(m / 8) * 3),
-      temp_c: Math.round((28 + Math.sin(m / 10 + i) * 1.5) * 10) / 10,
-      odor_index: i === 3 && m % 3 === 0 ? null : 150 + i * 40 + Math.round(Math.sin(m / 5) * 40),  // b3: flaky odor sensor
+      fill_pct: (wet ? 58 : 28) + i * 2 + Math.round(Math.sin(m / 8) * (wet ? 7 : 3)),
+      temp_c: Math.round(((wet ? 31 : 25) + Math.sin(m / 10 + i) * (wet ? 2.5 : 1.5)) * 10) / 10,
+      odor_index: i === 3 && m % 3 === 0 ? null
+        : (wet ? 360 : 110) + i * 20 + Math.round(Math.sin(m / 5) * (wet ? 85 : 35)),  // b3: flaky odor sensor
       battery_pct: 80 - i * 10,
       animal_alert: false,
       smoke: false,
