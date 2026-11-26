@@ -22,7 +22,7 @@ export default function SensorHealthView({ alerts }) {
   const [baseline, setBaseline] = useState([])
 
   const kindBins = bins.filter((b) => (b.kind ?? 'dry') === kind)
-  const bin = kindBins.find((b) => b.id === binId) ?? kindBins[0]
+  const bin = bins.find((b) => b.id === binId) ?? kindBins[0]
   const history = useSensorHistory(bin?.id)
 
   useEffect(() => {
@@ -69,8 +69,8 @@ export default function SensorHealthView({ alerts }) {
           <p className="panel-sub">{bin ? bin.name : 'No bin selected'}</p>
         </div>
         <div className="controls">
-          <select value={bin?.id ?? ''} onChange={(e) => setBinId(e.target.value)}>
-            {kindBins.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+          <select value={bin?.id ?? ''} onChange={(e) => pickBin(e.target.value)}>
+            {bins.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
           </select>
           <div className="seg">
             {[['dry', 'Dry bin'], ['wet', 'Wet bin']].map(([k, l]) => (
