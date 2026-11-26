@@ -3,7 +3,6 @@ import { useBinData } from '../hooks/useBinData'
 import { useAlerts } from '../hooks/useAlerts'
 import { useBinAssignments } from '../hooks/useBinAssignments'
 import { workerState } from '../utils/colorCode'
-import { resolveAlert, enableNotifications } from '../services/alertService'
 import Navbar from '../components/common/Navbar'
 import AlertBadge from '../components/common/AlertBadge'
 import BinList from '../components/worker/BinList'
@@ -13,6 +12,9 @@ import CollectionHistory from '../components/worker/CollectionHistory'
 import ReportForm from '../components/public/ReportForm'
 import { Map as MapIcon, LayoutDashboard } from 'lucide-react'
 import Sidebar from '../components/common/Sidebar'
+
+import { useWorkers } from '../hooks/useWorkers'
+import { resolveAlert, enableNotifications, acknowledgeAlert } from '../services/alertService'  // add acknowledgeAlert
 
 const NAV = [
   { key: 'map', label: 'Campus map', icon: MapIcon, to: '/', end: true },
@@ -30,6 +32,7 @@ export default function WorkerDashboard() {
   const [perm, setPerm] = useState(
     'Notification' in window ? Notification.permission : 'unsupported'
   )
+  const { workers } = useWorkers({ onlyActive: true })
 
   if (loading) return <p className="hint">Loading…</p>
 
@@ -49,6 +52,12 @@ export default function WorkerDashboard() {
     await resolveAlert(id)
     refreshAlerts()
   }
+  
+const onAck = async (id, workerId) => {
+  const res = await acknowledgeAlert(id, workerId)
+  if (!res.ok) return window.alert(res.error)
+  refreshAlerts()
+}
 
   return (
   <div className="shell">
@@ -87,7 +96,7 @@ export default function WorkerDashboard() {
         <BinList bins={bins} assignments={assignments} onChanged={onChanged}
           onReport={setReportBin} onDetails={setDetailId} />
       )}
-      {tab === 'alerts' && <AlertFeed alerts={alerts} bins={bins} onResolve={onResolve} />}
+      {tab === 'alerts' && <AlertFeed alerts={alerts} bins={bins} workers={workers} onResolve={onResolve} onAck={onAck} />}
       {tab === 'history' && <CollectionHistory refreshKey={historyKey} />}
     </div>
 

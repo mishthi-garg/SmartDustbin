@@ -1,6 +1,6 @@
 import { supabase } from './supabase'
 import { ALERT_META } from '../utils/thresholds'
-import { MOCK_HISTORY } from '../utils/mockBins'
+import { MOCK_HISTORY, MOCK_ALERTS } from '../utils/mockBins'
 
 export async function markCollected(binId) {
   if (!supabase) return { ok: true }
@@ -51,5 +51,20 @@ export async function notifyAlert(a) {
 export async function startCollecting(binId) {
   if (!supabase) return { ok: true }
   const { error } = await supabase.rpc('start_collecting', { p_bin_id: binId })
+  return error ? { ok: false, error: error.message } : { ok: true }
+}
+
+export async function acknowledgeAlert(alertId, workerId, note = null) {
+  if (!supabase) {
+    const a = MOCK_ALERTS.find((x) => x.id === alertId)
+    if (a && !a.acknowledged_at) {
+      a.acknowledged_at = new Date().toISOString()
+      a.acknowledged_worker_id = workerId
+    }
+    return { ok: true }
+  }
+  const { error } = await supabase.rpc('acknowledge_alert', {
+    p_alert_id: alertId, p_worker_id: workerId, p_note: note,
+  })
   return error ? { ok: false, error: error.message } : { ok: true }
 }

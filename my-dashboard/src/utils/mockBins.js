@@ -10,9 +10,9 @@ export const MOCK_BINS = [
 const ago = (min) => new Date(Date.now() - min * 60000).toISOString()
 
 export const MOCK_ALERTS = [
-  { id: 1, bin_id: 'b4', type: 'fire',   severity: 3, message: 'Smoke / high temperature', created_at: ago(2) },
-  { id: 2, bin_id: 'b3', type: 'full',   severity: 2, message: 'Fill level 92%',           created_at: ago(14) },
-  { id: 3, bin_id: 'b3', type: 'animal', severity: 1, message: 'Animal activity detected', created_at: ago(30) },
+  { id: 1, bin_id: 'b4', assigned_worker_id: 'w3',type: 'fire',   severity: 3, message: 'Smoke / high temperature', created_at: ago(2) },
+  { id: 2, bin_id: 'b3', assigned_worker_id: 'w1', type: 'full',   severity: 2, message: 'Fill level 92%',           created_at: ago(14) },
+  { id: 3, bin_id: 'b3', assigned_worker_id: 'w1', type: 'animal', severity: 1, message: 'Animal activity detected', created_at: ago(30) },
 ]
 
 // export const MOCK_HISTORY = [
@@ -25,9 +25,15 @@ export const MOCK_HISTORY = [
   { id: 2, field_worker: { name: 'Suresh' }, bin_id: 'b3', collected_at: ago(420), worker_name: 'Suresh', fill_before: 91, bins: { name: 'Library' } },
 ]
 
+// export const MOCK_ASSIGNMENTS = {
+//   b1: { worker: 'Ramesh', collecting_since: null },
+//   b2: { worker: 'Suresh', collecting_since: null },
+//   b3: { worker: 'Ramesh', collecting_since: new Date(Date.now() - 10 * 60000).toISOString() },
+//   b4: { worker: 'Mahesh', collecting_since: null },
+// }
 export const MOCK_ASSIGNMENTS = {
-  b1: { worker: 'Ramesh', collecting_since: null },
-  b2: { worker: 'Suresh', collecting_since: null },
-  b3: { worker: 'Ramesh', collecting_since: new Date(Date.now() - 10 * 60000).toISOString() },
-  b4: { worker: 'Mahesh', collecting_since: null },
+  b1: { worker: 'Ramesh', worker_id: 'w1', collecting_since: null },
+  b2: { worker: 'Suresh', worker_id: 'w2', collecting_since: null },
+  b3: { worker: 'Ramesh', worker_id: 'w1', collecting_since: new Date(Date.now() - 10 * 60000).toISOString() },
+  b4: { worker: 'Mahesh', worker_id: 'w3', collecting_since: null },
 }

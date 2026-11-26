@@ -1,10 +1,12 @@
-import { createContext, useCallback, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { SettingsContext } from './SettingsContext'
 import { supabase } from '../services/supabase'
 import { MOCK_BINS } from '../utils/mockBins'
 
 export const BinContext = createContext(null)
 
 export function BinProvider({ children }) {
+  const { version } = useContext(SettingsContext)
   const [bins, setBins] = useState([])
   const [loading, setLoading] = useState(true)
   const [live, setLive] = useState(false)
@@ -35,7 +37,7 @@ export function BinProvider({ children }) {
   }, [load])
 
   return (
-    <BinContext.Provider value={{ bins, loading, live, refresh: load }}>
+    <BinContext.Provider value={{ bins, loading, live, refresh: load, settingsVersion: version }}>
       {children}
     </BinContext.Provider>
   )

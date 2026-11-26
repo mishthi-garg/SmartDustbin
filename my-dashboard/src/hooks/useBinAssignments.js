@@ -6,18 +6,22 @@ export function useBinAssignments() {
   const [assignments, setAssignments] = useState({})
 
   const load = useCallback(async () => {
-    if (!supabase) { setAssignments(MOCK_ASSIGNMENTS); return }
-    const { data } = await supabase.from('bins').select('id, collecting_since, workers(name)')
+    if (!supabase) { setAssignments({ ...MOCK_ASSIGNMENTS }); return }
+    const { data } = await supabase
+      .from('bins').select('id, collecting_since, worker_id, workers(name)')
     if (!data) return
     setAssignments(Object.fromEntries(
-      data.map((b) => [b.id, { worker: b.workers?.name ?? null, collecting_since: b.collecting_since }])
+      data.map((b) => [b.id, {
+        worker: b.workers?.name ?? null,
+        worker_id: b.worker_id,
+        collecting_since: b.collecting_since,
+      }])
     ))
   }, [])
 
   useEffect(() => {
     load()
     if (!supabase) return
-    // another supervisor starts a pickup → this screen updates too
     const channel = supabase
       .channel('bins-feed')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'bins' }, load)

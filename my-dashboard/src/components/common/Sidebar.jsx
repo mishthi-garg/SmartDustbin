@@ -15,15 +15,17 @@ function Item({ item, active, onSelect }) {
 
   if (to) {
     return (
-      <NavLink to={to} end={end}
+      <NavLink to={to} end={end} title={label}
         className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
         {body}
       </NavLink>
     )
   }
-  if (soon) return <span className="nav-item disabled">{body}</span>
+  if (soon) return <span className="nav-item disabled" title={label}>
+    {body}
+  </span>
   return (
-    <button className={`nav-item ${active === key ? 'active' : ''}`} onClick={() => onSelect?.(key)}>
+    <button className={`nav-item ${active === key ? 'active' : ''}`} title={label} onClick={() => onSelect?.(key)}>
       {body}
     </button>
   )

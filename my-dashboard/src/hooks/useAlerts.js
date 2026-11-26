@@ -10,7 +10,7 @@ export function useAlerts() {
   const [stored, setStored] = useState([])
 
   const load = useCallback(async () => {
-    if (!supabase) { setStored(MOCK_ALERTS); return }
+    if (!supabase) { setStored([...MOCK_ALERTS]); return }
     const { data } = await supabase
       .from('alerts').select('*')
       .is('resolved_at', null)

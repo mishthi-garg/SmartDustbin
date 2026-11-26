@@ -10,9 +10,19 @@ import AnalyticsOverview from './components/admin/AnalyticsOverview'
 import BinTrends from './components/admin/BinTrends'
 import ProblematicBins from './components/admin/ProblematicBins'
 import TechnicianPanel from './pages/TechnicianPanel'
+import AlertHistory from './components/admin/AlertHistory'
+import WorkerTable from './components/admin/WorkerTable'
+import BinAssignments from './components/admin/BinAssignments'
+import WorkerPerformance from './components/admin/WorkerPerformance'
+import CollectionLogs from './components/admin/CollectionLogs'
+import { SettingsProvider } from './context/SettingsContext'
+import SensorHealth from './components/admin/SensorHealth'
+import AlertThresholds from './components/admin/AlertThresholds'
+import ReportDownload from './components/admin/ReportDownload'
 
 export default function App() {
   return (
+    <SettingsProvider>
     <AuthProvider>
       <BinProvider>
         <Routes>
@@ -37,6 +47,14 @@ export default function App() {
             <Route index element={<AnalyticsOverview />} />
             <Route path="trends" element={<BinTrends />} />
             <Route path="problematic" element={<ProblematicBins />} />
+            <Route path="alerts" element={<AlertHistory />} />
+<Route path="workers" element={<WorkerTable />} />
+<Route path="assignments" element={<BinAssignments />} />
+<Route path="performance" element={<WorkerPerformance />} />
+<Route path="logs" element={<CollectionLogs />} />
+<Route path="sensors" element={<SensorHealth />} />
+<Route path="thresholds" element={<AlertThresholds />} />
+<Route path="reports" element={<ReportDownload />} />
           </Route>
           <Route
             path="/tech"
@@ -49,5 +67,6 @@ export default function App() {
         </Routes>
       </BinProvider>
     </AuthProvider>
+    </SettingsProvider>
   )
 }
