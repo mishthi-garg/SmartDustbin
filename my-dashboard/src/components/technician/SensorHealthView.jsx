@@ -91,7 +91,7 @@ export default function SensorHealthView({ alerts }) {
       )}
 
       <section className="panel map-compact">
-        <BinMap bins={bins} selected={selectedBin} />
+        <BinMap bins={bins} selected={selectedBin} onSelect={pickBin} />
       </section>
 
       {!kindBins.length ? (
